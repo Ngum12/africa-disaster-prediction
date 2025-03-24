@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Disaster & Conflict Predictor</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Africa Disaster & Conflict Prediction</h1>
+
+  <h2>🔮 Predict Single Event</h2>
+  <form action="/predict" method="post">
+    <label>Country:</label><input name="country" type="text" required><br>
+    <label>Region (ADMIN1):</label><input name="region" type="text" required><br>
+    <label>Total Events:</label><input name="total_events" type="number" step="any" required><br>
+    <label>Total Fatalities:</label><input name="total_fatalities" type="number" step="any" required><br>
+    <label>Rainfall (mm):</label><input name="rainfall_mm" type="number" step="any" required><br>
+    <label>Drought Index:</label><input name="drought_index" type="number" step="any" required><br>
+    <label>Temperature (°C):</label><input name="temp_celsius" type="number" step="any" required><br>
+    <label>Poverty Rate:</label><input name="poverty_rate" type="number" step="any" required><br>
+    <label>Literacy Rate:</label><input name="literacy_rate" type="number" step="any" required><br>
+    <label>Infrastructure Score:</label><input name="infrastructure_score" type="number" step="any" required><br>
+    <label>Past Conflicts (3 months):</label><input name="past_conflicts_3mo" type="number" required><br>
+    <button type="submit">Predict</button>
+  </form>
+
+  {% if prediction is defined %}
+    <h3>🧠 Prediction: {{ prediction }} (Confidence: {{ confidence }})</h3>
+  {% endif %}
+
+  <hr>
+
+  <h2>📤 Upload CSV for Batch Prediction</h2>
+  <form action="/upload" enctype="multipart/form-data" method="post">
+    <input name="file" type="file" accept=".csv" required>
+    <button type="submit">Upload and Predict</button>
+  </form>
+
+  <hr>
+
+  <h2>🔁 Retrain Model</h2>
+  <form action="/retrain" method="post">
+    <button type="submit">Retrain Model</button>
+  </form>
+</body>
+</html>
