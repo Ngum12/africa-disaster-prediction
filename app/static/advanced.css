@@ -1,0 +1,791 @@
+/* Advanced Visualization Styles */
+
+/* Satellite Feed Styles */
+.satellite-container {
+  position: relative;
+  height: 350px;
+  background-color: #111;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.map-base {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/static/africa_map_outline.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+}
+
+.satellite-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.loading-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 1;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 10px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.satellite-metrics {
+  display: flex;
+  justify-content: space-around;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0 0 8px 8px;
+  margin-top: -8px;
+}
+
+.metric {
+  text-align: center;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Federated Learning Styles */
+.federated-learning-card {
+  margin-top: 24px;
+}
+
+.federated-description {
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+}
+
+.federated-status-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.node-container {
+  flex: 1;
+  min-width: 300px;
+}
+
+.nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.node.active {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+}
+
+.node.pending {
+  background-color: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.5);
+}
+
+.node-icon {
+  font-size: 1.5rem;
+  margin-right: 12px;
+}
+
+.node-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.node-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.node-status {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.federated-metrics {
+  flex: 1;
+  min-width: 300px;
+}
+
+.metric-group {
+  margin-bottom: 16px;
+}
+
+.progress-indicator {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.last-update {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Uncertainty Visualization */
+.uncertainty-container {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+}
+
+.uncertainty-explanation {
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.uncertainty-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+/* XAI Dashboard Styles */
+.xai-dashboard {
+  margin-top: 24px;
+}
+
+.xai-explanation {
+  margin-bottom: 16px;
+}
+
+.xai-components {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 24px;
+}
+
+.xai-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+
+.counterfactuals-container h3 {
+  margin-bottom: 16px;
+}
+
+.explanation {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.counterfactual-scenarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.counterfactual-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.counterfactual-card:hover {
+  box-shadow: 0 4px 12px var(--shadow);
+  transform: translateY(-2px);
+}
+
+.counterfactual-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.counterfactual-header h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.impact-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.impact-badge.positive {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+}
+
+.impact-badge.negative {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #F44336;
+}
+
+.counterfactual-change {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.counterfactual-predictions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prediction-pair {
+  flex: 1;
+}
+
+.prediction-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.arrow {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+/* Intervention Simulator Styles */
+.intervention-simulator {
+  margin-top: 32px;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px var(--shadow);
+}
+
+.simulator-description {
+  margin-bottom: 24px;
+  color: var(--text-secondary);
+}
+
+.interventions-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.intervention-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.intervention-card:hover {
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.intervention-card.selected {
+  border-color: var(--primary);
+  background-color: rgba(46, 125, 50, 0.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.impact-indicator {
+  padding: 4px 8px;
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.intervention-description {
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.intervention-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 0.8rem;
+}
+
+.meta-item {
+  color: var(--text-secondary);
+}
+
+.select-intervention {
+  width: 100%;
+  padding: 8px 16px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select-intervention:hover {
+  background-color: var(--primary-dark);
+}
+
+.select-intervention:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.simulation-results {
+  padding: 24px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 24px;
+}
+
+.impact-visualization {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.impact-gauge-container {
+  flex: 1;
+  min-width: 300px;
+}
+
+.selected-interventions {
+  flex: 1;
+  min-width: 300px;
+}
+
+.selected-interventions h4 {
+  margin-bottom: 16px;
+}
+
+.selected-interventions ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.selected-interventions li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.impact-value {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.total-investment, .implementation-time {
+  margin-bottom: 16px;
+}
+
+.label {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.reset-btn {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+  background-color: rgba(46, 125, 50, 0.1);
+}
+
+/* Advanced Training Monitor Styles */
+.training-progress {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: var(--bg-light);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.status-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.status-indicators {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.status-indicator {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-indicator.idle {
+  background-color: rgba(158, 158, 158, 0.2);
+  color: #757575;
+}
+
+.status-indicator.training {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: #1976d2;
+  animation: pulse 2s infinite;
+}
+
+.status-indicator.complete {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #388e3c;
+}
+
+.status-indicator.failed {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #d32f2f;
+}
+
+.connection-status {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+}
+
+.connection-status.connected {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #388e3c;
+}
+
+.connection-status.disconnected {
+  background-color: rgba(158, 158, 158, 0.2);
+  color: #757575;
+}
+
+.connection-status.error {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #d32f2f;
+}
+
+.training-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .training-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.epoch-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+#epoch-counter {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.hardware-metrics {
+  display: flex;
+  gap: 12px;
+}
+
+.metric {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.metric-value {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.learning-curves-container {
+  height: 100%;
+  min-height: 300px;
+}
+
+.hyperparam-importance {
+  margin-top: 24px;
+}
+
+/* Pulsing animation for active training */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Crisis Simulator Styles */
+.crisis-simulator {
+  margin-top: 32px;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.simulator-description {
+  margin-bottom: 24px;
+  color: var(--text-secondary);
+}
+
+.simulator-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+}
+
+.control-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.control-group input {
+  width: 100%;
+}
+
+.range-value {
+  display: inline-block;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.simulation-dashboard {
+  display: grid;
+  grid-template-areas:
+    "metrics metrics"
+    "visualization visualization"
+    "charts charts"
+    "interventions interventions";
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .simulation-dashboard {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "metrics metrics"
+      "visualization charts"
+      "interventions interventions";
+  }
+}
+
+.simulation-metrics {
+  grid-area: metrics;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
+  background-color: var(--primary-darker);
+  border-radius: 8px;
+  color: white;
+}
+
+.sim-metric {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.metric-name {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.metric-value {
+  margin-top: 4px;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.simulation-visualization {
+  grid-area: visualization;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+#simulation-canvas {
+  max-width: 100%;
+  border: 1px solid #ddd;
+}
+
+.simulation-charts {
+  grid-area: charts;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intervention-panel {
+  grid-area: interventions;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+}
+
+.intervention-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.intervention-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.intervention-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.intervention-log {
+  height: 150px;
+  overflow-y: auto;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.log-entry {
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.log-day {
+  font-weight: bold;
+  color: var(--primary);
+}

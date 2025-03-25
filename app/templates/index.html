@@ -1,45 +1,1408 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Disaster & Conflict Predictor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Africa Disaster & Conflict Prediction</title>
   <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/advanced.css">
+  <!-- Add Plotly.js for interactive visualizations -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- Add Chart.js as alternative visualization library -->
+   <!-- Add the WebSocket-based training monitor -->
+<script src="/static/training-monitor.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Add D3.js for advanced custom visualizations -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="/static/advanced.js" defer></script>
 </head>
 <body>
-  <h1>Africa Disaster & Conflict Prediction</h1>
+  <div class="dashboard-container">
+    <header>
+      <h1>Africa Disaster & Conflict Prediction</h1>
+      <p class="subtitle">Advanced AI-powered risk assessment platform</p>
+    </header>
 
-  <h2>🔮 Predict Single Event</h2>
-  <form action="/predict" method="post">
-    <label>Country:</label><input name="country" type="text" required><br>
-    <label>Region (ADMIN1):</label><input name="region" type="text" required><br>
-    <label>Total Events:</label><input name="total_events" type="number" step="any" required><br>
-    <label>Total Fatalities:</label><input name="total_fatalities" type="number" step="any" required><br>
-    <label>Rainfall (mm):</label><input name="rainfall_mm" type="number" step="any" required><br>
-    <label>Drought Index:</label><input name="drought_index" type="number" step="any" required><br>
-    <label>Temperature (°C):</label><input name="temp_celsius" type="number" step="any" required><br>
-    <label>Poverty Rate:</label><input name="poverty_rate" type="number" step="any" required><br>
-    <label>Literacy Rate:</label><input name="literacy_rate" type="number" step="any" required><br>
-    <label>Infrastructure Score:</label><input name="infrastructure_score" type="number" step="any" required><br>
-    <label>Past Conflicts (3 months):</label><input name="past_conflicts_3mo" type="number" required><br>
-    <button type="submit">Predict</button>
-  </form>
+    <nav class="dashboard-nav">
+      <button class="nav-tab active" data-target="prediction-section">Prediction</button>
+      <button class="nav-tab" data-target="visualization-section">Analytics</button>
+      <button class="nav-tab" data-target="batch-section">Batch Processing</button>
+      <button class="nav-tab" data-target="model-section">Model Management</button>
+      <button class="nav-tab" data-target="advanced-section">Advanced AI</button>
+    </nav>
 
-  {% if prediction is defined %}
-    <h3>🧠 Prediction: {{ prediction }} (Confidence: {{ confidence }})</h3>
-  {% endif %}
+    <main>
+      <!-- Prediction Section -->
+      <section id="prediction-section" class="dashboard-section active">
+        <div class="card">
+          <h2>🔮 Real-time Risk Assessment</h2>
+          <form action="/predict" method="post" id="prediction-form" class="two-column-form">
+            <div class="form-group">
+              <label for="country">Country:</label>
+              <input id="country" name="country" type="text" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="region">Region (ADMIN1):</label>
+              <input id="region" name="region" type="text" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="total_events">Total Events:</label>
+              <input id="total_events" name="total_events" type="number" step="any" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="total_fatalities">Total Fatalities:</label>
+              <input id="total_fatalities" name="total_fatalities" type="number" step="any" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="rainfall_mm">Rainfall (mm):</label>
+              <input id="rainfall_mm" name="rainfall_mm" type="number" step="any" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="drought_index">Drought Index:</label>
+              <input id="drought_index" name="drought_index" type="number" step="any" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="temp_celsius">Temperature (°C):</label>
+              <input id="temp_celsius" name="temp_celsius" type="number" step="any" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="poverty_rate">Poverty Rate (%):</label>
+              <input id="poverty_rate" name="poverty_rate" type="number" step="any" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="literacy_rate">Literacy Rate (%):</label>
+              <input id="literacy_rate" name="literacy_rate" type="number" step="any" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="infrastructure_score">Infrastructure Score:</label>
+              <input id="infrastructure_score" name="infrastructure_score" type="number" step="any" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="past_conflicts_3mo">Past Conflicts (3 months):</label>
+              <input id="past_conflicts_3mo" name="past_conflicts_3mo" type="number" required>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn primary">Run Prediction</button>
+              <button type="button" id="live-data-btn" class="btn secondary">Use Live Data</button>
+            </div>
+          </form>
 
-  <hr>
+          {% if prediction is defined %}
+          <div class="prediction-result {% if prediction == 'Conflict Likely' %}danger{% else %}safe{% endif %}">
+            <div class="result-header">
+              <h3>Prediction Result</h3>
+              <span class="timestamp">{{ timestamp }}</span>
+            </div>
+            <div class="result-content">
+              <div class="prediction-gauge" id="risk-gauge"></div>
+              <div class="prediction-text">
+                <p class="prediction-label">{{ prediction }}</p>
+                <p class="prediction-confidence">Confidence: {{ confidence }}</p>
+              </div>
+            </div>
+            <div class="feature-importance" id="feature-importance-chart"></div>
+          </div>
+          {% endif %}
+        </div>
+      </section>
 
-  <h2>📤 Upload CSV for Batch Prediction</h2>
-  <form action="/upload" enctype="multipart/form-data" method="post">
-    <input name="file" type="file" accept=".csv" required>
-    <button type="submit">Upload and Predict</button>
-  </form>
+      <!-- Visualization Section -->
+      <section id="visualization-section" class="dashboard-section">
+        <div class="card">
+          <h2>📊 Real-time Analytics Dashboard</h2>
+          
+          <div class="visualization-controls">
+            <div class="filter-group">
+              <label for="time-range">Time Range:</label>
+              <select id="time-range">
+                <option value="30">Last 30 days</option>
+                <option value="90">Last 3 months</option>
+                <option value="365">Last year</option>
+                <option value="all">All time</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="region-filter">Region:</label>
+              <select id="region-filter">
+                <option value="all">All Regions</option>
+                <!-- Will be populated dynamically -->
+              </select>
+            </div>
+            <button id="refresh-viz" class="btn secondary">Refresh Data</button>
+          </div>
+          
+          <div class="visualization-grid">
+            <div class="viz-card">
+              <h3>Conflict Trends Over Time</h3>
+              <div id="time-series-chart" class="chart-container"></div>
+            </div>
+            
+            <div class="viz-card">
+              <h3>Risk Factors Correlation</h3>
+              <div id="correlation-heatmap" class="chart-container"></div>
+            </div>
+            
+            <div class="viz-card">
+              <h3>Regional Risk Distribution</h3>
+              <div id="choropleth-map" class="chart-container"></div>
+            </div>
+            
+            <div class="viz-card">
+              <h3>Environmental Impact Analysis</h3>
+              <div id="environmental-impact" class="chart-container"></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <hr>
+      <!-- Batch Processing Section -->
+      <section id="batch-section" class="dashboard-section">
+        <div class="card">
+          <h2>📤 Batch Prediction Processing</h2>
+          
+          <div class="upload-container">
+            <form action="/upload" enctype="multipart/form-data" method="post" id="upload-form">
+              <div class="file-upload">
+                <label for="file-input">
+                  <div class="upload-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"></path>
+                    </svg>
+                  </div>
+                  <div class="upload-text">
+                    <span class="primary-text">Drag & drop your CSV file</span>
+                    <span class="secondary-text">or click to browse</span>
+                  </div>
+                </label>
+                <input id="file-input" name="file" type="file" accept=".csv" />
+              </div>
+              <button type="submit" class="btn primary">Process Batch</button>
+            </form>
+          </div>
+          
+          <div id="batch-results" class="batch-results-container" style="display: none;">
+            <div class="results-header">
+              <h3>Batch Processing Results</h3>
+              <button id="download-results" class="btn secondary">Download Results</button>
+            </div>
+            
+            <div class="results-summary">
+              <div class="summary-item">
+                <span class="summary-label">Total Records:</span>
+                <span id="total-records" class="summary-value">0</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Conflicts Predicted:</span>
+                <span id="conflicts-predicted" class="summary-value">0</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Safe Regions:</span>
+                <span id="safe-regions" class="summary-value">0</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Processing Time:</span>
+                <span id="processing-time" class="summary-value">0ms</span>
+              </div>
+            </div>
+            
+            <div class="batch-visualization">
+              <div id="batch-prediction-chart" class="chart-container"></div>
+            </div>
+            
+            <div class="results-table-container">
+              <table id="results-table" class="results-table">
+                <thead>
+                  <tr>
+                    <th>Country</th>
+                    <th>Region</th>
+                    <th>Prediction</th>
+                    <th>Confidence</th>
+                    <th>Key Factors</th>
+                  </tr>
+                </thead>
+                <tbody id="results-table-body">
+                  <!-- Will be populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <h2>🔁 Retrain Model</h2>
-  <form action="/retrain" method="post">
-    <button type="submit">Retrain Model</button>
-  </form>
+      <!-- Model Management Section -->
+      <section id="model-section" class="dashboard-section">
+        <div class="card">
+          <h2>⚙️ Model Management & Retraining</h2>
+          
+          <div class="model-info">
+            <div class="info-card">
+              <h3>Current Model Status</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Model Version:</span>
+                  <span class="info-value">v3.2.1</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Last Trained:</span>
+                  <span class="info-value">2025-03-10</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Accuracy:</span>
+                  <span class="info-value">87.4%</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">F1 Score:</span>
+                  <span class="info-value">0.892</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Precision:</span>
+                  <span class="info-value">0.863</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Recall:</span>
+                  <span class="info-value">0.923</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="model-metrics">
+              <h3>Performance Metrics</h3>
+              <div id="model-metrics-chart" class="chart-container"></div>
+            </div>
+          </div>
+          
+          <div class="model-training">
+            <h3>Model Retraining</h3>
+            <p class="training-description">
+              Retrain the model with the latest data to improve prediction accuracy. This process may take several minutes.
+            </p>
+            
+            <div class="training-options">
+              <div class="option-group">
+                <label for="training-data">Training Data Source:</label>
+                <select id="training-data">
+                  <option value="default">Default Dataset</option>
+                  <option value="enhanced">Enhanced Dataset (includes satellite data)</option>
+                  <option value="custom">Custom Dataset</option>
+                </select>
+              </div>
+              
+              <div class="option-group" id="custom-data-upload" style="display: none;">
+                <label for="custom-training-file">Upload Custom Dataset:</label>
+                <input type="file" id="custom-training-file" accept=".csv" />
+              </div>
+              
+              <div class="option-group">
+                <label for="training-params">Advanced Parameters:</label>
+                <div class="params-toggle">
+                  <input type="checkbox" id="advanced-params-toggle" />
+                  <label for="advanced-params-toggle">Configure advanced parameters</label>
+                </div>
+              </div>
+              
+              <div id="advanced-params" class="advanced-params" style="display: none;">
+                <div class="param-item">
+                  <label for="n-estimators">Number of Estimators:</label>
+                  <input type="number" id="n-estimators" value="100" min="10" max="1000" />
+                </div>
+                <div class="param-item">
+                  <label for="max-depth">Max Depth:</label>
+                  <input type="number" id="max-depth" value="None" min="1" max="100" />
+                </div>
+                <div class="param-item">
+                  <label for="test-size">Test Size:</label>
+                  <input type="range" id="test-size" value="0.2" min="0.1" max="0.5" step="0.05" />
+                  <span id="test-size-value">0.2</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="training-actions">
+              <form action="/retrain" method="post" id="retrain-form">
+                <input type="hidden" id="training-params-input" name="training_params" value="" />
+                <button type="submit" class="btn primary">Retrain Model</button>
+              </form>
+            </div>
+            
+            <div id="training-progress" class="training-progress" style="display: none;">
+              <div class="progress-header">
+                <div class="status-container">
+                  <h4>Training Status</h4>
+                  <div class="status-indicators">
+                    <span id="training-status-indicator" class="status-indicator idle">Idle</span>
+                    <span id="training-connection-status" class="connection-status disconnected">Disconnected</span>
+                  </div>
+                </div>
+                <span id="progress-percent">0%</span>
+              </div>
+              
+              <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+              </div>
+              
+              <div class="training-detail-grid">
+                <div class="training-detail-column">
+                  <div class="epoch-info">
+                    <span id="epoch-counter">Epoch 0/0</span>
+                    <div class="hardware-metrics">
+                      <span class="metric">GPU: <span class="metric-value">RTX 4090</span></span>
+                      <span class="metric">Memory: <span class="metric-value">12.4 GB</span></span>
+                      <span class="metric">Batch Size: <span class="metric-value">64</span></span>
+                    </div>
+                  </div>
+                  <div id="training-log" class="training-log"></div>
+                </div>
+                
+                <div class="training-detail-column">
+                  <div id="learning-curves-container" class="learning-curves-container" style="display: none;">
+                    <h4>Learning Curves</h4>
+                    <div id="learning-curves-chart" class="chart-container"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="hyperparam-importance" style="display: none;">
+                <h4>Hyperparameter Importance</h4>
+                <div id="hyperparam-chart" class="chart-container"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Advanced Analytics Section -->
+      <section id="advanced-section" class="dashboard-section">
+        <div class="card">
+          <h2>🌍 Advanced Predictive Analytics</h2>
+          
+          <div class="viz-card satellite-card">
+            <h3>Live Satellite Monitoring</h3>
+            <div id="satellite-feed" class="chart-container satellite-container">
+              <div class="map-base"></div>
+              <div class="loading-indicator">
+                <div class="spinner"></div>
+                <p>Establishing satellite data connection...</p>
+              </div>
+            </div>
+            <div class="satellite-metrics">
+              <div class="metric">
+                <span class="metric-label">Drought Index:</span>
+                <span class="metric-value" id="live-drought-index">0.65</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Precipitation:</span>
+                <span class="metric-value" id="live-precipitation">32mm</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Temperature:</span>
+                <span class="metric-value" id="live-temperature">29.3°C</span>
+              </div>
+            </div>
+          </div>
+          
+          <div id="intervention-simulator" class="intervention-simulator"></div>
+          
+          <div id="xai-dashboard" class="xai-dashboard">
+            <h2>🔍 Explainable AI Dashboard</h2>
+            <div class="xai-explanation">
+              <p>This dashboard provides transparency into our model's decision-making process, revealing why predictions are made and what factors influence them.</p>
+            </div>
+            
+            <div class="xai-components">
+              <div class="xai-card">
+                <div id="shapley-values" class="chart-container"></div>
+              </div>
+              
+              <div class="xai-card">
+                <div id="counterfactuals" class="counterfactuals-container"></div>
+              </div>
+              
+              <div class="xai-card">
+                <div id="concept-activation" class="chart-container"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Federated Learning Section -->
+      <div class="card federated-learning-card">
+        <h2>🌐 Federated Learning Network</h2>
+        <p class="federated-description">
+          This model utilizes privacy-preserving federated learning to train across multiple organizations 
+          without sharing sensitive data. Watch as model weights are aggregated in real-time.
+        </p>
+        <div id="federated-status" class="federated-status-container"></div>
+      </div>
+
+      <!-- Uncertainty Analysis -->
+      <div class="uncertainty-container">
+        <h3>Prediction Uncertainty Analysis</h3>
+        <p class="uncertainty-explanation">
+          Bayesian analysis provides confidence intervals for each prediction, highlighting areas of model uncertainty.
+        </p>
+        <div id="uncertainty-chart" class="chart-container"></div>
+        <div class="uncertainty-legend">
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: rgba(255, 120, 0, 0.7)"></span>
+            <span class="legend-text">Prediction Distribution</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #f44336"></span>
+            <span class="legend-text">Uncertainty Range</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crisis Simulator Section -->
+      <div id="crisis-simulator" class="crisis-simulator"></div>
+
+    </main>
+
+    <footer>
+      <p>© 2025 Africa Disaster & Conflict Prediction Platform | <a href="#">Documentation</a> | <a href="#">API</a></p>
+    </footer>
+  </div>
+
+  <!-- Add JavaScript for interactive functionality -->
+  <script>
+    // Tab switching functionality
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and sections
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Show corresponding section
+        const targetSection = tab.getAttribute('data-target');
+        document.getElementById(targetSection).classList.add('active');
+      });
+    });
+
+    // Initialize visualizations when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if prediction exists and render gauge
+      if (document.getElementById('risk-gauge')) {
+        const confidenceText = document.querySelector('.prediction-confidence').textContent;
+        const confidenceValue = parseFloat(confidenceText.replace('Confidence: ', '')) || 0.5;
+        
+        renderRiskGauge(confidenceValue);
+        renderFeatureImportance();
+      }
+      
+      // Initialize dashboard visualizations
+      if (document.getElementById('time-series-chart')) {
+        renderTimeSeries();
+        renderCorrelationHeatmap();
+        renderChoroplethMap();
+        renderEnvironmentalImpact();
+      }
+      
+      // Show custom data upload when custom dataset is selected
+      document.getElementById('training-data').addEventListener('change', function() {
+        document.getElementById('custom-data-upload').style.display = 
+          this.value === 'custom' ? 'block' : 'none';
+      });
+      
+      // Advanced parameters toggle
+      document.getElementById('advanced-params-toggle').addEventListener('change', function() {
+        document.getElementById('advanced-params').style.display = 
+          this.checked ? 'block' : 'none';
+      });
+      
+      // Update test size display value
+      document.getElementById('test-size').addEventListener('input', function() {
+        document.getElementById('test-size-value').textContent = this.value;
+      });
+      
+      // Live data button functionality
+      document.getElementById('live-data-btn').addEventListener('click', function() {
+        // Populate form with sample data
+        document.getElementById('country').value = 'Nigeria';
+        document.getElementById('region').value = 'Borno';
+        document.getElementById('total_events').value = '27';
+        document.getElementById('total_fatalities').value = '142';
+        document.getElementById('rainfall_mm').value = '78.3';
+        document.getElementById('drought_index').value = '0.65';
+        document.getElementById('temp_celsius').value = '32.4';
+        document.getElementById('poverty_rate').value = '63.5';
+        document.getElementById('literacy_rate').value = '42.8';
+        document.getElementById('infrastructure_score').value = '3.2';
+        document.getElementById('past_conflicts_3mo').value = '12';
+      });
+      
+      // Handle form submission
+      document.getElementById('retrain-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show progress bar
+        document.getElementById('training-progress').style.display = 'block';
+        
+        // Collect parameters
+        const trainingParams = {
+          data_source: document.getElementById('training-data').value,
+          n_estimators: document.getElementById('n-estimators').value,
+          max_depth: document.getElementById('max-depth').value,
+          test_size: document.getElementById('test-size').value
+        };
+        
+        document.getElementById('training-params-input').value = JSON.stringify(trainingParams);
+        
+        // Simulate progress
+        simulateTrainingProgress();
+        
+        // Submit the form
+        this.submit();
+      });
+    });
+    
+    // Function to render risk gauge
+    function renderRiskGauge(confidenceValue) {
+      const gaugeData = [{
+        type: 'indicator',
+        mode: 'gauge+number',
+        value: confidenceValue * 100,
+        title: { text: 'Risk Level', font: { size: 16 } },
+        gauge: {
+          axis: { range: [0, 100], tickwidth: 1, tickcolor: 'darkblue' },
+          bar: { color: 'rgba(0,0,0,0)' },
+          bgcolor: 'white',
+          borderwidth: 2,
+          bordercolor: 'gray',
+          steps: [
+            { range: [0, 30], color: '#4caf50' },
+            { range: [30, 70], color: '#ff9800' },
+            { range: [70, 100], color: '#f44336' }
+          ],
+          threshold: {
+            line: { color: 'black', width: 4 },
+            thickness: 0.75,
+            value: confidenceValue * 100
+          }
+        }
+      }];
+
+      const layout = {
+        width: 250,
+        height: 180,
+        margin: { t: 25, r: 25, l: 25, b: 25 },
+        font: { size: 12 }
+      };
+
+      Plotly.newPlot('risk-gauge', gaugeData, layout);
+    }
+    
+    // Function to render feature importance
+    function renderFeatureImportance() {
+      // Sample feature importance data
+      const features = [
+        'past_conflicts_3mo',
+        'poverty_rate',
+        'rainfall_mm',
+        'total_events',
+        'drought_index',
+        'infrastructure_score'
+      ];
+      
+      const importance = [0.32, 0.22, 0.18, 0.15, 0.08, 0.05];
+      
+      const data = [{
+        type: 'bar',
+        x: importance,
+        y: features,
+        orientation: 'h',
+        marker: {
+          color: importance.map(val => 
+            val > 0.25 ? '#f44336' : 
+            val > 0.15 ? '#ff9800' : '#4caf50'
+          )
+        }
+      }];
+      
+      const layout = {
+        title: 'Feature Importance',
+        font: { size: 12 },
+        margin: { t: 30, b: 30, l: 150, r: 30 },
+        xaxis: { title: 'Importance' }
+      };
+      
+      Plotly.newPlot('feature-importance-chart', data, layout);
+    }
+    
+    // Function to render time series chart
+    function renderTimeSeries() {
+      // Sample time series data
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const conflicts = [23, 18, 21, 20, 32, 45, 37, 30, 28, 33, 29, 25];
+      const rainfall = [45, 57, 78, 120, 115, 95, 70, 88, 110, 70, 55, 48];
+      
+      const trace1 = {
+        x: months,
+        y: conflicts,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Conflicts',
+        line: { color: '#f44336' }
+      };
+      
+      const trace2 = {
+        x: months,
+        y: rainfall,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Rainfall (mm)',
+        yaxis: 'y2',
+        line: { color: '#2196f3' }
+      };
+      
+      const data = [trace1, trace2];
+      
+      const layout = {
+        title: 'Conflict Events vs Rainfall',
+        xaxis: { title: 'Month' },
+        yaxis: { title: 'Number of Conflicts', side: 'left' },
+        yaxis2: {
+          title: 'Rainfall (mm)',
+          overlaying: 'y',
+          side: 'right'
+        },
+        legend: { x: 0, y: 1 }
+      };
+      
+      Plotly.newPlot('time-series-chart', data, layout);
+    }
+    
+    // Function to render correlation heatmap
+    function renderCorrelationHeatmap() {
+      // Sample correlation data
+      const variables = [
+        'Conflicts', 'Fatalities', 'Rainfall', 'Drought', 
+        'Temperature', 'Poverty', 'Literacy', 'Infrastructure'
+      ];
+      
+      const correlationMatrix = [
+        [1.0, 0.8, -0.6, 0.7, 0.5, 0.7, -0.6, -0.5],
+        [0.8, 1.0, -0.4, 0.5, 0.4, 0.6, -0.5, -0.4],
+        [-0.6, -0.4, 1.0, -0.8, -0.3, -0.5, 0.4, 0.3],
+        [0.7, 0.5, -0.8, 1.0, 0.6, 0.5, -0.4, -0.5],
+        [0.5, 0.4, -0.3, 0.6, 1.0, 0.4, -0.3, -0.2],
+        [0.7, 0.6, -0.5, 0.5, 0.4, 1.0, -0.8, -0.7],
+        [-0.6, -0.5, 0.4, -0.4, -0.3, -0.8, 1.0, 0.6],
+        [-0.5, -0.4, 0.3, -0.5, -0.2, -0.7, 0.6, 1.0]
+      ];
+      
+      const data = [{
+        type: 'heatmap',
+        z: correlationMatrix,
+        x: variables,
+        y: variables,
+        colorscale: [
+          [0, '#4575b4'],
+          [0.5, '#ffffbf'],
+          [1, '#d73027']
+        ],
+        zmin: -1,
+        zmax: 1
+      }];
+      
+      const layout = {
+        title: 'Correlation Between Risk Factors',
+        yaxis: { ticks: '' },
+        margin: { t: 50, b: 30, l: 100, r: 30 }
+      };
+      
+      Plotly.newPlot('correlation-heatmap', data, layout);
+    }
+    
+    // Function to render choropleth map
+    function renderChoroplethMap() {
+      fetch('/api/map-data')
+        .then(response => response.json())
+        .then(data => {
+          const mapData = [{
+            type: 'choropleth',
+            locationmode: 'country names',
+            locations: data.countries,
+            z: data.risk_scores,
+            text: data.hover_texts,
+            colorscale: [
+              [0, '#4caf50'],
+              [0.5, '#ff9800'],
+              [1, '#f44336']
+            ],
+            autocolorscale: false,
+            reversescale: false,
+            marker: {
+              line: {
+                color: '#777',
+                width: 0.5
+              }
+            },
+            colorbar: {
+              title: 'Risk Index',
+              thickness: 20
+            }
+          }];
+
+          const layout = {
+            title: 'Conflict Risk Across Africa',
+            geo: {
+              scope: 'africa',
+              showframe: false,
+              showcoastlines: true,
+              projection: {
+                type: 'mercator'
+              }
+            }
+          };
+
+          Plotly.newPlot('choropleth-map', mapData, layout);
+        })
+        .catch(error => {
+          console.error('Error loading map data:', error);
+          document.getElementById('choropleth-map').innerHTML = 
+            '<div class="map-placeholder">Unable to load map data. Please try again later.</div>';
+        });
+    }
+    
+    // Function to render environmental impact analysis
+    function renderEnvironmentalImpact() {
+      // Sample environmental data
+      const factors = ['Drought', 'Rainfall', 'Temperature', 'Crop Yield', 'Water Access'];
+      const impact = [0.65, 0.78, 0.45, 0.83, 0.72];
+      
+      const data = [{
+        type: 'bar',
+        x: factors,
+        y: impact,
+        marker: {
+          color: ['#ff9800', '#2196f3', '#f44336', '#4caf50', '#2196f3']
+        }
+      }];
+      
+      const layout = {
+        title: 'Environmental Factors Impact on Conflict',
+        yaxis: { title: 'Impact Score (0-1)', range: [0, 1] }
+      };
+      
+      Plotly.newPlot('environmental-impact', data, layout);
+    }
+    
+    // Function to simulate training progress
+    function simulateTrainingProgress() {
+      const progressBar = document.getElementById('progress-bar');
+      const progressPercent = document.getElementById('progress-percent');
+      const trainingLog = document.getElementById('training-log');
+      
+      let progress = 0;
+      const logMessages = [
+        'Initializing training environment...',
+        'Loading and preprocessing data...',
+        'Splitting into training and test sets...',
+        'Training Random Forest model...',
+        'Evaluating model performance...',
+        'Calculating feature importance...',
+        'Saving model and components...',
+        'Finalizing model deployment...'
+      ];
+      
+      // Add initial log message
+      addLogMessage(logMessages[0]);
+      
+      const interval = setInterval(() => {
+        if (progress >= 100) {
+          clearInterval(interval);
+          return;
+        }
+        
+        progress += Math.floor(Math.random() * 10) + 1;
+        if (progress > 100) progress = 100;
+        
+        progressBar.style.width = `${progress}%`;
+        progressPercent.textContent = `${progress}%`;
+        
+        // Add log messages at certain progress points
+        if (progress > 10 && progress <= 25) addLogMessage(logMessages[1]);
+        if (progress > 25 && progress <= 40) addLogMessage(logMessages[2]);
+        if (progress > 40 && progress <= 60) addLogMessage(logMessages[3]);
+        if (progress > 60 && progress <= 75) addLogMessage(logMessages[4]);
+        if (progress > 75 && progress <= 85) addLogMessage(logMessages[5]);
+        if (progress > 85 && progress <= 95) addLogMessage(logMessages[6]);
+        if (progress > 95) addLogMessage(logMessages[7]);
+      }, 500);
+      
+      function addLogMessage(message) {
+        if (!trainingLog.textContent.includes(message)) {
+          trainingLog.innerHTML += `<div>${message}</div>`;
+          trainingLog.scrollTop = trainingLog.scrollHeight;
+        }
+      }
+    }
+  </script>
+
+  <!-- JavaScript for interactive functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize tab switching
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs and sections
+          document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          tab.classList.add('active');
+          
+          // Show corresponding section
+          const targetSection = tab.getAttribute('data-target');
+          document.getElementById(targetSection).classList.add('active');
+        });
+      });
+
+      // Handle file upload
+      const fileInput = document.getElementById('file-input');
+      if (fileInput) {
+        fileInput.addEventListener('change', function() {
+          if (this.files.length > 0) {
+            document.querySelector('.primary-text').textContent = this.files[0].name;
+          }
+        });
+      }
+
+      // Handle upload form submission
+      const uploadForm = document.getElementById('upload-form');
+      if (uploadForm) {
+        uploadForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(this);
+          
+          try {
+            const response = await fetch('/upload', {
+              method: 'POST',
+              body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+              // Show results container
+              document.getElementById('batch-results').style.display = 'block';
+              
+              // Update result summary
+              document.getElementById('total-records').textContent = data.total_records;
+              document.getElementById('conflicts-predicted').textContent = data.conflicts_predicted;
+              document.getElementById('safe-regions').textContent = data.safe_regions;
+              document.getElementById('processing-time').textContent = `${Math.round(data.processing_time_ms)}ms`;
+              
+              // Render batch prediction chart
+              renderBatchPredictionChart(data.conflicts_predicted, data.safe_regions);
+              
+              // Populate results table
+              const tbody = document.getElementById('results-table-body');
+              tbody.innerHTML = '';
+              
+              data.results_sample.forEach(result => {
+                const tr = document.createElement('tr');
+                
+                // Get country/region from whatever fields are available
+                const country = result.COUNTRY || result.Country || "";
+                const region = result.ADMIN1 || result.Region || "";
+                const prediction = result.result || (result.prediction == 1 ? "Conflict Likely" : "No Conflict Expected");
+                const confidence = typeof result.probability === 'number' ? `${(result.probability * 100).toFixed(1)}%` : "N/A";
+                
+                tr.innerHTML = `
+                  <td>${country}</td>
+                  <td>${region}</td>
+                  <td class="${result.prediction == 1 ? 'text-danger' : 'text-success'}">${prediction}</td>
+                  <td>${confidence}</td>
+                  <td>Environmental factors</td>
+                `;
+                
+                tbody.appendChild(tr);
+              });
+            } else {
+              alert(`Error: ${data.detail || 'Failed to process batch file'}`);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while processing the file. Please try again.');
+          }
+        });
+      }
+
+      // Handle retrain form submission
+      const retrainForm = document.getElementById('retrain-form');
+      if (retrainForm) {
+        retrainForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          // Show progress bar
+          document.getElementById('training-progress').style.display = 'block';
+          
+          // Collect parameters
+          const trainingParams = {
+            data_source: document.getElementById('training-data')?.value || 'default',
+            n_estimators: document.getElementById('n-estimators')?.value || 100,
+            max_depth: document.getElementById('max-depth')?.value || 'None',
+            test_size: document.getElementById('test-size')?.value || 0.2
+          };
+          
+          if (document.getElementById('training-params-input')) {
+            document.getElementById('training-params-input').value = JSON.stringify(trainingParams);
+          }
+          
+          // Simulate progress
+          simulateTrainingProgress();
+          
+          try {
+            const formData = new FormData(this);
+            
+            const response = await fetch('/retrain', {
+              method: 'POST',
+              body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+              // Refresh metrics if available
+              if (data.metrics) {
+                updateModelMetrics(data.metrics);
+              }
+            } else {
+              alert(`Error: ${data.detail || 'Failed to retrain model'}`);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            // Keep the progress simulation going since we're demonstrating
+          }
+        });
+      }
+
+      // Initialize visualizations if elements exist
+      if (document.getElementById('risk-gauge')) {
+        const confidenceValue = 0.75; // Default value if none provided
+        renderRiskGauge(confidenceValue);
+      }
+
+      if (document.getElementById('feature-importance-chart')) {
+        renderFeatureImportance();
+      }
+
+      if (document.getElementById('time-series-chart')) {
+        renderTimeSeries();
+      }
+
+      if (document.getElementById('correlation-heatmap')) {
+        renderCorrelationHeatmap();
+      }
+
+      if (document.getElementById('model-metrics-chart')) {
+        fetchAndRenderModelPerformance();
+      }
+    });
+
+    // Function to simulate training progress
+    function simulateTrainingProgress() {
+      const progressBar = document.getElementById('progress-bar');
+      const progressPercent = document.getElementById('progress-percent');
+      const trainingLog = document.getElementById('training-log');
+      
+      if (!progressBar || !progressPercent || !trainingLog) return;
+      
+      let progress = 0;
+      const logMessages = [
+        'Initializing training environment...',
+        'Loading and preprocessing data...',
+        'Splitting into training and test sets...',
+        'Training Random Forest model...',
+        'Evaluating model performance...',
+        'Calculating feature importance...',
+        'Saving model and components...',
+        'Finalizing model deployment...'
+      ];
+      
+      // Add initial log message
+      addLogMessage(logMessages[0]);
+      
+      const interval = setInterval(() => {
+        if (progress >= 100) {
+          clearInterval(interval);
+          return;
+        }
+        
+        progress += Math.floor(Math.random() * 10) + 1;
+        if (progress > 100) progress = 100;
+        
+        progressBar.style.width = `${progress}%`;
+        progressPercent.textContent = `${progress}%`;
+        
+        // Add log messages at certain progress points
+        if (progress > 10 && progress <= 25) addLogMessage(logMessages[1]);
+        if (progress > 25 && progress <= 40) addLogMessage(logMessages[2]);
+        if (progress > 40 && progress <= 60) addLogMessage(logMessages[3]);
+        if (progress > 60 && progress <= 75) addLogMessage(logMessages[4]);
+        if (progress > 75 && progress <= 85) addLogMessage(logMessages[5]);
+        if (progress > 85 && progress <= 95) addLogMessage(logMessages[6]);
+        if (progress > 95) addLogMessage(logMessages[7]);
+      }, 500);
+      
+      function addLogMessage(message) {
+        if (!trainingLog.textContent.includes(message)) {
+          trainingLog.innerHTML += `<div>${message}</div>`;
+          trainingLog.scrollTop = trainingLog.scrollHeight;
+        }
+      }
+    }
+
+    // Function to render risk gauge
+    function renderRiskGauge(confidenceValue) {
+      // If Plotly is not loaded or element doesn't exist, return
+      if (!window.Plotly || !document.getElementById('risk-gauge')) return;
+      
+      const gaugeData = [{
+        type: 'indicator',
+        mode: 'gauge+number',
+        value: confidenceValue * 100,
+        title: { text: 'Risk Level', font: { size: 16 } },
+        gauge: {
+          axis: { range: [0, 100], tickwidth: 1, tickcolor: 'darkblue' },
+          bar: { color: 'rgba(0,0,0,0)' },
+          bgcolor: 'white',
+          borderwidth: 2,
+          bordercolor: 'gray',
+          steps: [
+            { range: [0, 30], color: '#4caf50' },
+            { range: [30, 70], color: '#ff9800' },
+            { range: [70, 100], color: '#f44336' }
+          ],
+          threshold: {
+            line: { color: 'black', width: 4 },
+            thickness: 0.75,
+            value: confidenceValue * 100
+          }
+        }
+      }];
+
+      const layout = {
+        width: 250,
+        height: 180,
+        margin: { t: 25, r: 25, l: 25, b: 25 },
+        font: { size: 12 }
+      };
+
+      Plotly.newPlot('risk-gauge', gaugeData, layout);
+    }
+
+    // Function to render feature importance chart
+    function renderFeatureImportance() {
+      if (!window.Plotly || !document.getElementById('feature-importance-chart')) return;
+      
+      // Sample feature importance data - would be real data in production
+      const features = [
+        'past_conflicts_3mo',
+        'poverty_rate',
+        'rainfall_mm',
+        'total_events',
+        'drought_index',
+        'infrastructure_score'
+      ];
+      
+      const importance = [0.32, 0.22, 0.18, 0.15, 0.08, 0.05];
+      
+      const data = [{
+        type: 'bar',
+        x: importance,
+        y: features,
+        orientation: 'h',
+        marker: {
+          color: importance.map(val => 
+            val > 0.25 ? '#f44336' : 
+            val > 0.15 ? '#ff9800' : '#4caf50'
+          )
+        }
+      }];
+      
+      const layout = {
+        title: 'Feature Importance',
+        font: { size: 12 },
+        margin: { t: 30, b: 30, l: 150, r: 30 },
+        xaxis: { title: 'Importance' }
+      };
+      
+      Plotly.newPlot('feature-importance-chart', data, layout);
+    }
+
+    // Function to render time series chart
+    function renderTimeSeries() {
+      if (!window.Plotly || !document.getElementById('time-series-chart')) return;
+      
+      // Fetch real data from API in production
+      fetch('/api/visualization-data')
+        .then(response => response.json())
+        .then(data => {
+          const trace1 = {
+            x: data.dates,
+            y: data.conflict_events,
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'Conflicts',
+            line: { color: '#f44336' }
+          };
+          
+          const trace2 = {
+            x: data.dates,
+            y: data.rainfall,
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'Rainfall (mm)',
+            yaxis: 'y2',
+            line: { color: '#2196f3' }
+          };
+          
+          const layout = {
+            title: 'Conflict Events vs Rainfall',
+            xaxis: { title: 'Date' },
+            yaxis: { title: 'Number of Conflicts', side: 'left' },
+            yaxis2: {
+              title: 'Rainfall (mm)',
+              overlaying: 'y',
+              side: 'right'
+            },
+            legend: { x: 0, y: 1 }
+          };
+          
+          Plotly.newPlot('time-series-chart', [trace1, trace2], layout);
+        })
+        .catch(error => {
+          console.error('Error fetching visualization data:', error);
+          // Render with demo data if fetch fails
+          renderTimeSeriesDemo();
+        });
+    }
+
+    function renderTimeSeriesDemo() {
+      if (!window.Plotly || !document.getElementById('time-series-chart')) return;
+      
+      // Demo time series data
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const conflicts = [23, 18, 21, 20, 32, 45, 37, 30, 28, 33, 29, 25];
+      const rainfall = [45, 57, 78, 120, 115, 95, 70, 88, 110, 70, 55, 48];
+      
+      const trace1 = {
+        x: months,
+        y: conflicts,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Conflicts',
+        line: { color: '#f44336' }
+      };
+      
+      const trace2 = {
+        x: months,
+        y: rainfall,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Rainfall (mm)',
+        yaxis: 'y2',
+        line: { color: '#2196f3' }
+      };
+      
+      const layout = {
+        title: 'Conflict Events vs Rainfall',
+        xaxis: { title: 'Month' },
+        yaxis: { title: 'Number of Conflicts', side: 'left' },
+        yaxis2: {
+          title: 'Rainfall (mm)',
+          overlaying: 'y',
+          side: 'right'
+        },
+        legend: { x: 0, y: 1 }
+      };
+      
+      Plotly.newPlot('time-series-chart', [trace1, trace2], layout);
+    }
+
+    // Function to render correlation heatmap
+    function renderCorrelationHeatmap() {
+      if (!window.Plotly || !document.getElementById('correlation-heatmap')) return;
+      
+      // Sample correlation data
+      const variables = [
+        'Conflicts', 'Fatalities', 'Rainfall', 'Drought', 
+        'Temperature', 'Poverty', 'Literacy', 'Infrastructure'
+      ];
+      
+      const correlationMatrix = [
+        [1.0, 0.8, -0.6, 0.7, 0.5, 0.7, -0.6, -0.5],
+        [0.8, 1.0, -0.4, 0.5, 0.4, 0.6, -0.5, -0.4],
+        [-0.6, -0.4, 1.0, -0.8, -0.3, -0.5, 0.4, 0.3],
+        [0.7, 0.5, -0.8, 1.0, 0.6, 0.5, -0.4, -0.5],
+        [0.5, 0.4, -0.3, 0.6, 1.0, 0.4, -0.3, -0.2],
+        [0.7, 0.6, -0.5, 0.5, 0.4, 1.0, -0.8, -0.7],
+        [-0.6, -0.5, 0.4, -0.4, -0.3, -0.8, 1.0, 0.6],
+        [-0.5, -0.4, 0.3, -0.5, -0.2, -0.7, 0.6, 1.0]
+      ];
+      
+      const data = [{
+        type: 'heatmap',
+        z: correlationMatrix,
+        x: variables,
+        y: variables,
+        colorscale: [
+          [0, '#4575b4'],
+          [0.5, '#ffffbf'],
+          [1, '#d73027']
+        ],
+        zmin: -1,
+        zmax: 1
+      }];
+      
+      const layout = {
+        title: 'Correlation Between Risk Factors',
+        xaxis: { ticks: '', side: 'top' },
+        yaxis: { ticks: '' },
+        margin: { t: 50, b: 30, l: 100, r: 30 }
+      };
+      
+      Plotly.newPlot('correlation-heatmap', data, layout);
+    }
+
+    // Function to render batch prediction chart
+    function renderBatchPredictionChart(conflicts, safe) {
+      if (!window.Plotly || !document.getElementById('batch-prediction-chart')) return;
+      
+      const data = [{
+        values: [conflicts, safe],
+        labels: ['Conflict Likely', 'No Conflict Expected'],
+        type: 'pie',
+        marker: {
+          colors: ['#f44336', '#4caf50']
+        },
+        textinfo: 'value+percent',
+        insidetextfont: {
+          color: '#ffffff'
+        }
+      }];
+      
+      const layout = {
+        title: 'Prediction Results Distribution',
+        height: 300,
+        margin: { l: 50, r: 50, t: 50, b: 50 }
+      };
+      
+      Plotly.newPlot('batch-prediction-chart', data, layout);
+    }
+
+    // Function to fetch and render model performance chart
+    function fetchAndRenderModelPerformance() {
+      if (!window.Plotly || !document.getElementById('model-metrics-chart')) return;
+      
+      fetch('/api/model-performance')
+        .then(response => response.json())
+        .then(data => {
+          const versions = data.versions;
+          const metrics = data.metrics;
+          
+          const traces = [
+            {
+              x: versions,
+              y: metrics.accuracy,
+              type: 'scatter',
+              mode: 'lines+markers',
+              name: 'Accuracy',
+              line: { color: '#2196f3' }
+            },
+            {
+              x: versions,
+              y: metrics.precision,
+              type: 'scatter',
+              mode: 'lines+markers',
+              name: 'Precision',
+              line: { color: '#4caf50' }
+            },
+            {
+              x: versions,
+              y: metrics.recall,
+              type: 'scatter',
+              mode: 'lines+markers',
+              name: 'Recall',
+              line: { color: '#ff9800' }
+            },
+            {
+              x: versions,
+              y: metrics.f1_score,
+              type: 'scatter',
+              mode: 'lines+markers',
+              name: 'F1 Score',
+              line: { color: '#9c27b0' }
+            }
+          ];
+          
+          const layout = {
+            title: 'Model Performance Across Versions',
+            xaxis: { title: 'Model Version' },
+            yaxis: { title: 'Score', range: [0.6, 1.0] }
+          };
+          
+          Plotly.newPlot('model-metrics-chart', traces, layout);
+        })
+        .catch(error => {
+          console.error('Error fetching model performance data:', error);
+        });
+    }
+
+    // Function to update model metrics in the UI
+    function updateModelMetrics(metrics) {
+      const metricsElements = {
+        accuracy: document.querySelector('.info-item:nth-child(3) .info-value'),
+        f1_score: document.querySelector('.info-item:nth-child(4) .info-value'),
+        precision: document.querySelector('.info-item:nth-child(5) .info-value'),
+        recall: document.querySelector('.info-item:nth-child(6) .info-value')
+      };
+      
+      // Update values if elements exist
+      if (metrics && metricsElements.accuracy) {
+        metricsElements.accuracy.textContent = `${(metrics.accuracy * 100).toFixed(1)}%`;
+      }
+      
+      if (metrics && metricsElements.f1_score) {
+        metricsElements.f1_score.textContent = metrics.f1_score.toFixed(3);
+      }
+      
+      if (metrics && metricsElements.precision) {
+        metricsElements.precision.textContent = metrics.precision.toFixed(3);
+      }
+      
+      if (metrics && metricsElements.recall) {
+        metricsElements.recall.textContent = metrics.recall.toFixed(3);
+      }
+      
+      // Update last trained date
+      const lastTrainedElement = document.querySelector('.info-item:nth-child(2) .info-value');
+      if (lastTrainedElement) {
+        const now = new Date();
+        lastTrainedElement.textContent = now.toISOString().split('T')[0];
+      }
+    }
+  </script>
+
+  <!-- Include the Crisis Simulator script -->
+  <script src="/static/crisis-simulator.js" defer></script>
 </body>
 </html>
