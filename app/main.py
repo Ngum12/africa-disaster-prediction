@@ -320,24 +320,90 @@ def get_satellite_feed():
     import random
     import time
     
-    data_points = []
-    for _ in range(20):
-        data_points.append({
-            "x": random.randint(20, 380),
-            "y": random.randint(20, 330),
-            "intensity": random.uniform(0.3, 1.0),
-            "severity": random.uniform(0.2, 0.8)
+    # Generate hotspots with realistic parameters
+    hotspots = []
+    regions = [
+        {"name": "North Darfur", "lat": 14.5, "lng": 25.5, "factors": ["Drought", "Resource Competition"]},
+        {"name": "Eastern Congo", "lat": -1.5, "lng": 29.5, "factors": ["Conflict History", "Resource Control"]},
+        {"name": "Southern Somalia", "lat": 2.5, "lng": 43.5, "factors": ["Drought", "Governance Gaps"]},
+        {"name": "Northern Nigeria", "lat": 12.0, "lng": 8.5, "factors": ["Religious Tensions", "Water Scarcity"]},
+        {"name": "Central Mali", "lat": 15.5, "lng": -2.5, "factors": ["Ethnic Conflict", "Climate Change"]}
+    ]
+    
+    for region in regions:
+        risk_base = random.uniform(0.6, 0.9)
+        
+        # Create more realistic risk values based on factors
+        if "Drought" in region["factors"]:
+            risk_base += 0.05
+        if "Conflict History" in region["factors"]:
+            risk_base += 0.08
+        
+        hotspots.append({
+            "region": region["name"],
+            "lat": region["lat"] + random.uniform(-0.3, 0.3),  # Add slight variation
+            "lng": region["lng"] + random.uniform(-0.3, 0.3),
+            "risk": min(0.95, risk_base),  # Cap at 0.95
+            "factors": region["factors"],
+            "trend": random.choice(["increasing", "stable", "decreasing"]),
+            "prediction_confidence": random.uniform(0.7, 0.9)
         })
+    
+    # Create a more detailed environmental metrics dataset
+    environmental_metrics = {
+        "drought_index": round(random.uniform(0.3, 0.9), 2),
+        "rainfall_mm": round(random.uniform(10, 100), 1),
+        "temperature": round(random.uniform(22, 36), 1),
+        "vegetation_index": round(random.uniform(0.2, 0.7), 2),
+        "soil_moisture": round(random.uniform(0.1, 0.5), 2),
+        "water_body_change": round(random.uniform(-0.2, 0.1), 2)
+    }
+    
+    # Generate satellite data grid (would be real satellite imagery in production)
+    grid_size = 50
+    satellite_grid = []
+    
+    for i in range(grid_size):
+        row = []
+        for j in range(grid_size):
+            # Create more realistic patterns
+            # Distance from center affects values
+            dist_from_center = ((i - grid_size/2)**2 + (j - grid_size/2)**2)**0.5 / (grid_size/2)
+            
+            # Create some geographic features
+            if random.random() < 0.05:  # Water bodies
+                value = 0.1
+            elif random.random() < 0.1:  # Mountains
+                value = 0.9
+            else:  # Normal terrain with some patterns
+                value = 0.3 + dist_from_center * 0.4 + random.uniform(-0.1, 0.1)
+            
+            row.append(round(value, 2))
+        satellite_grid.append(row)
     
     return {
         "timestamp": int(time.time() * 1000),  # Current time in milliseconds
-        "dataPoints": data_points,
-        "significantChange": random.choice([True, False]),
-        "environmentalMetrics": {
-            "drought_index": round(random.uniform(0.3, 0.9), 2),
-            "rainfall_mm": round(random.uniform(10, 100), 1),
-            "temperature": round(random.uniform(22, 36), 1),
-        }
+        "hotspots": hotspots,
+        "environmentalMetrics": environmental_metrics,
+        "satelliteData": {
+            "gridSize": grid_size,
+            "resolution": "30m",
+            "bands": ["visible", "infrared", "thermal"],
+            "grid": satellite_grid,
+            "timestamp": int(time.time() * 1000) - 86400000,  # Yesterday
+            "coverage": 0.92,  # Coverage percentage
+            "source": "Sentinel-2"  # Satellite source
+        },
+        "alerts": [
+            {
+                "id": "alert-" + str(int(time.time())),
+                "severity": "high",
+                "type": "drought",
+                "region": "Horn of Africa",
+                "description": "Severe drought conditions detected in northern regions",
+                "timestamp": int(time.time() * 1000) - 3600000
+            }
+        ]
     }
 
 
