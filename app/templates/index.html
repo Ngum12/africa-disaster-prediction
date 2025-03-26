@@ -17,6 +17,116 @@
   <script src="/static/advanced.js" defer></script>
   <!-- Add the Satellite Intelligence System script -->
   <script src="/static/satellite-intelligence.js" defer></script>
+  <!-- Add AI Ethics and Explainability scripts -->
+  <script src="/static/ai-ethics-monitor.js" defer></script>
+  <script src="/static/explainable-ai.js" defer></script>
+  <style>
+  /* Early Warning Hub Core Styles */
+  .early-warning-hub {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .warning-panel {
+    background-color: #1a2639;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  .warning-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #232f3e;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .warning-system-status {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .status-text {
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+  
+  .status-text::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    margin-right: 8px;
+    display: inline-block;
+  }
+  
+  .warning-alert-counter {
+    background-color: rgba(244, 67, 54, 0.15);
+    border-radius: 8px;
+    padding: 8px 16px;
+    text-align: center;
+  }
+  
+  .alert-count {
+    font-size: 24px;
+    font-weight: 700;
+    color: #f44336;
+    display: block;
+  }
+  
+  .alerts-container {
+    padding: 0 16px 16px 16px;
+    color: #fff;
+  }
+  
+  .alert-item {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+  
+  .alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .alert-severity {
+    display: flex;
+    align-items: center;
+  }
+  
+  .severity-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .severity-high .severity-indicator {
+    background-color: #ff9800;
+  }
+  
+  .severity-medium .severity-indicator {
+    background-color: #ffeb3b;
+  }
+  
+  .alert-content {
+    padding: 16px;
+  }
+</style>
 </head>
 <body>
   <div class="dashboard-container">
@@ -36,88 +146,245 @@
     <main>
       <!-- Prediction Section -->
       <section id="prediction-section" class="dashboard-section active">
-        <div class="card">
-          <h2>🔮 Real-time Risk Assessment</h2>
-          <form action="/predict" method="post" id="prediction-form" class="two-column-form">
-            <div class="form-group">
-              <label for="country">Country:</label>
-              <input id="country" name="country" type="text" required>
+  <div class="prediction-cosmos">
+    <div class="orbital-background"></div>
+    <div class="prediction-stars"></div>
+    <div class="data-particles"></div>
+    
+    <div class="prediction-card">
+      <div class="prediction-header">
+        <h2>Predictive Intelligence System</h2>
+        <p class="prediction-subtitle">Neural-enhanced risk assessment powered by satellite imagery and machine learning</p>
+      </div>
+      
+      <div class="prediction-interface">
+        <div class="prediction-form-container">
+          <form action="/predict" method="post" id="prediction-form" class="neural-form">
+            <div class="form-intro">
+              <div class="pulse-icon">
+                <span class="material-icons">settings_input_antenna</span>
+              </div>
+              <p>Enter regional parameters or select a location on the map to analyze conflict risk patterns</p>
             </div>
             
-            <div class="form-group">
-              <label for="region">Region (ADMIN1):</label>
-              <input id="region" name="region" type="text" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="total_events">Total Events:</label>
-              <input id="total_events" name="total_events" type="number" step="any" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="total_fatalities">Total Fatalities:</label>
-              <input id="total_fatalities" name="total_fatalities" type="number" step="any" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="rainfall_mm">Rainfall (mm):</label>
-              <input id="rainfall_mm" name="rainfall_mm" type="number" step="any" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="drought_index">Drought Index:</label>
-              <input id="drought_index" name="drought_index" type="number" step="any" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="temp_celsius">Temperature (°C):</label>
-              <input id="temp_celsius" name="temp_celsius" type="number" step="any" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="poverty_rate">Poverty Rate (%):</label>
-              <input id="poverty_rate" name="poverty_rate" type="number" step="any" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="literacy_rate">Literacy Rate (%):</label>
-              <input id="literacy_rate" name="literacy_rate" type="number" step="any" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="infrastructure_score">Infrastructure Score:</label>
-              <input id="infrastructure_score" name="infrastructure_score" type="number" step="any" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="past_conflicts_3mo">Past Conflicts (3 months):</label>
-              <input id="past_conflicts_3mo" name="past_conflicts_3mo" type="number" required>
+            <div class="parameter-groups">
+              <div class="parameter-group">
+                <h3>Location Parameters</h3>
+                <div class="parameter-grid">
+                  <div class="parameter-item">
+                    <label for="country">Country</label>
+                    <div class="enhanced-input">
+                      <input id="country" name="country" type="text" required>
+                      <div class="input-highlight"></div>
+                      <span class="geo-icon material-icons">public</span>
+                    </div>
+                  </div>
+                  
+                  <div class="parameter-item">
+                    <label for="region">Region (ADMIN1)</label>
+                    <div class="enhanced-input">
+                      <input id="region" name="region" type="text" required>
+                      <div class="input-highlight"></div>
+                      <span class="geo-icon material-icons">location_on</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="parameter-group">
+                <h3>Environmental Factors</h3>
+                <div class="parameter-grid">
+                  <div class="parameter-item">
+                    <label for="rainfall_mm">Rainfall (mm)</label>
+                    <div class="slider-container">
+                      <input id="rainfall_mm" name="rainfall_mm" type="range" min="0" max="500" step="0.1" value="78.3" class="parameter-slider rain-slider">
+                      <div class="slider-value" id="rainfall_display">78.3mm</div>
+                      <div class="slider-icon rain-icon"></div>
+                    </div>
+                  </div>
+                  
+                  <div class="parameter-item">
+                    <label for="drought_index">Drought Index</label>
+                    <div class="slider-container">
+                      <input id="drought_index" name="drought_index" type="range" min="0" max="1" step="0.01" value="0.65" class="parameter-slider drought-slider">
+                      <div class="slider-value" id="drought_display">0.65</div>
+                      <div class="slider-icon drought-icon"></div>
+                    </div>
+                  </div>
+                  
+                  <div class="parameter-item">
+                    <label for="temp_celsius">Temperature (°C)</label>
+                    <div class="slider-container">
+                      <input id="temp_celsius" name="temp_celsius" type="range" min="0" max="50" step="0.1" value="32.4" class="parameter-slider temp-slider">
+                      <div class="slider-value" id="temp_display">32.4°C</div>
+                      <div class="slider-icon temp-icon"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="parameter-group">
+                <h3>Socioeconomic Indicators</h3>
+                <div class="parameter-grid">
+                  <div class="parameter-item">
+                    <label for="poverty_rate">Poverty Rate (%)</label>
+                    <div class="slider-container">
+                      <input id="poverty_rate" name="poverty_rate" type="range" min="0" max="100" step="0.1" value="63.5" class="parameter-slider poverty-slider">
+                      <div class="slider-value" id="poverty_display">63.5%</div>
+                    </div>
+                  </div>
+                  
+                  <div class="parameter-item">
+                    <label for="literacy_rate">Literacy Rate (%)</label>
+                    <div class="slider-container">
+                      <input id="literacy_rate" name="literacy_rate" type="range" min="0" max="100" step="0.1" value="42.8" class="parameter-slider literacy-slider">
+                      <div class="slider-value" id="literacy_display">42.8%</div>
+                    </div>
+                  </div>
+                  
+                  <div class="parameter-item">
+                    <label for="infrastructure_score">Infrastructure Score</label>
+                    <div class="slider-container">
+                      <input id="infrastructure_score" name="infrastructure_score" type="range" min="0" max="10" step="0.1" value="3.2" class="parameter-slider infrastructure-slider">
+                      <div class="slider-value" id="infrastructure_display">3.2</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="parameter-group">
+                <h3>Conflict History</h3>
+                <div class="parameter-grid">
+                  <div class="parameter-item">
+                    <label for="total_events">Total Events</label>
+                    <div class="counter-input">
+                      <button type="button" class="counter-btn decrease" data-target="total_events">−</button>
+                      <input id="total_events" name="total_events" type="number" min="0" value="27" required>
+                      <button type="button" class="counter-btn increase" data-target="total_events">+</button>
+                    </div>
+                  </div>
+                  
+                  <div class="parameter-item">
+                    <label for="total_fatalities">Total Fatalities</label>
+                    <div class="counter-input">
+                      <button type="button" class="counter-btn decrease" data-target="total_fatalities">−</button>
+                      <input id="total_fatalities" name="total_fatalities" type="number" min="0" value="142" required>
+                      <button type="button" class="counter-btn increase" data-target="total_fatalities">+</button>
+                    </div>
+                  </div>
+                  
+                  <div class="parameter-item">
+                    <label for="past_conflicts_3mo">Past Conflicts (3 months)</label>
+                    <div class="counter-input">
+                      <button type="button" class="counter-btn decrease" data-target="past_conflicts_3mo">−</button>
+                      <input id="past_conflicts_3mo" name="past_conflicts_3mo" type="number" min="0" value="12" required>
+                      <button type="button" class="counter-btn increase" data-target="past_conflicts_3mo">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <div class="form-actions">
-              <button type="submit" class="btn primary">Run Prediction</button>
-              <button type="button" id="live-data-btn" class="btn secondary">Use Live Data</button>
+              <div class="neural-switch">
+                <label class="switch-label">
+                  <input type="checkbox" id="advanced-ai-switch" checked>
+                  <span class="switch-slider"></span>
+                  <span class="switch-text">Neural Enhancement</span>
+                </label>
+              </div>
+              <button type="button" id="live-data-btn" class="cosmic-btn secondary">
+                <span class="btn-pulse"></span>
+                <span class="btn-text">Use Live Data</span>
+              </button>
+              <button type="submit" class="cosmic-btn primary">
+                <span class="btn-pulse"></span>
+                <span class="btn-text">Run Prediction</span>
+              </button>
             </div>
           </form>
-
-          {% if prediction is defined %}
-          <div class="prediction-result {% if prediction == 'Conflict Likely' %}danger{% else %}safe{% endif %}">
-            <div class="result-header">
-              <h3>Prediction Result</h3>
-              <span class="timestamp">{{ timestamp }}</span>
-            </div>
-            <div class="result-content">
-              <div class="prediction-gauge" id="risk-gauge"></div>
-              <div class="prediction-text">
-                <p class="prediction-label">{{ prediction }}</p>
-                <p class="prediction-confidence">Confidence: {{ confidence }}</p>
+          
+          <div class="interactive-map" id="region-selection-map">
+            <div class="map-placeholder">
+              <!-- Africa map outline with interactive regions will be rendered here -->
+              <div class="map-overlay">
+                <div class="map-instructions">
+                  <span class="instruction-icon material-icons">touch_app</span>
+                  <p>Click on a region to auto-fill parameters</p>
+                </div>
               </div>
             </div>
-            <div class="feature-importance" id="feature-importance-chart"></div>
           </div>
-          {% endif %}
         </div>
-      </section>
+        
+        <div class="prediction-result-container" id="prediction-result-wrapper" style="display: none;">
+          <div class="result-card">
+            <div class="result-header">
+              <h3>Neural Analysis Complete</h3>
+              <span class="timestamp" id="prediction-timestamp">March 26, 2025 • 14:32:07</span>
+              <button class="close-result" id="close-result-btn">
+                <span class="material-icons">close</span>
+              </button>
+            </div>
+            
+            <div class="result-content">
+              <div class="risk-visualization">
+                <div class="gauge-container">
+                  <div class="prediction-gauge" id="risk-gauge"></div>
+                  <div class="gauge-needle" id="gauge-needle"></div>
+                </div>
+                <div class="risk-level-indicator">
+                  <div class="risk-animation" id="risk-animation"></div>
+                  <div class="prediction-text">
+                    <p class="prediction-label" id="prediction-result-text">Analysis in progress...</p>
+                    <p class="prediction-confidence" id="prediction-confidence">Calculating confidence...</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="result-details">
+                <div class="detail-panel uncertainty-panel">
+                  <h4>Uncertainty Analysis</h4>
+                  <div class="uncertainty-visualization" id="uncertainty-vis"></div>
+                  <div class="confidence-interval">
+                    <span id="confidence-interval-text">95% Confidence Interval: 0.72 - 0.89</span>
+                  </div>
+                </div>
+                
+                <div class="detail-panel factors-panel">
+                  <h4>Key Contributing Factors</h4>
+                  <div class="feature-importance" id="feature-importance-chart"></div>
+                </div>
+              </div>
+              
+              <div class="next-actions">
+                <div class="action-recommendations">
+                  <h4>Recommended Actions</h4>
+                  <ul id="action-recommendations-list">
+                    <li>Deploy early warning systems in affected areas</li>
+                    <li>Coordinate with humanitarian agencies on resource allocation</li>
+                    <li>Monitor environmental conditions for further deterioration</li>
+                  </ul>
+                </div>
+                
+                <div class="action-buttons">
+                  <button class="action-btn" id="download-report-btn">
+                    <span class="material-icons">description</span>
+                    <span>Download Report</span>
+                  </button>
+                  <button class="action-btn" id="share-insights-btn">
+                    <span class="material-icons">share</span>
+                    <span>Share Insights</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       <!-- Visualization Section -->
       <section id="visualization-section" class="dashboard-section">
@@ -437,6 +704,149 @@
           </div>
         </div>
       </section>
+
+      <!-- Advanced AI Ethics & Explainability Section -->
+      <div class="advanced-ai-ethics-section">
+        <h2>AI Ethics & Explainability</h2>
+        
+        <div class="ethics-explainability-container">
+          <div class="row">
+            <div class="col-12">
+              <div id="ethics-monitor-container"></div>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <div class="col-12">
+              <div id="explainable-ai-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Early Warning Integration Hub -->
+      <div class="early-warning-hub">
+        <h2>Early Warning Integration Hub</h2>
+        <p class="section-description">
+          Real-time integration of satellite imagery, field reports, and predictive analytics
+          to deliver actionable early warnings for humanitarian response.
+        </p>
+        
+        <div class="warning-panel" id="early-warning-panel">
+          <!-- Content will be loaded dynamically -->
+        </div>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Show loading state first
+          const panel = document.getElementById('early-warning-panel');
+          if (panel) {
+            panel.innerHTML = `
+              <div class="loading-container">
+                <div class="spinner"></div>
+                <p>Connecting to early warning systems...</p>
+              </div>
+            `;
+            
+            // Then load data
+            setTimeout(function() {
+              fetch('/api/early-warning')
+                .then(response => response.json())
+                .then(data => {
+                  renderWarningPanel(data);
+                })
+                .catch(error => {
+                  console.error('Error loading warning data:', error);
+                  panel.innerHTML = '<div class="error-message">Failed to load early warning data</div>';
+                });
+            }, 1000);
+          }
+        });
+        
+        function renderWarningPanel(data) {
+          const container = document.getElementById('early-warning-panel');
+          if (!container) return;
+          
+          let html = `
+            <div class="warning-header">
+              <div class="warning-system-status">
+                <span class="status-text">System Online</span>
+                <span class="status-detail">Last updated: ${data.system_status.data_freshness}</span>
+              </div>
+              <div class="warning-alert-counter">
+                <span class="alert-count">${data.alert_count}</span>
+                <span class="alert-label">Active Alerts</span>
+              </div>
+            </div>
+            
+            <div class="alerts-container">
+          `;
+          
+          data.alerts.forEach(alert => {
+            html += `
+              <div class="alert-item severity-${alert.severity}">
+                <div class="alert-header">
+                  <div class="alert-severity">
+                    <span class="severity-indicator"></span>
+                    <span class="severity-text">${alert.severity.toUpperCase()}</span>
+                  </div>
+                  <div class="alert-type">${formatAlertType(alert.type)}</div>
+                  <div class="alert-timeline">${alert.days_to_impact} days</div>
+                </div>
+                
+                <div class="alert-content">
+                  <div class="alert-region">
+                    <strong>${alert.region}</strong>
+                    <span class="countries-affected">${alert.countries.join(', ')}</span>
+                  </div>
+                  
+                  <div class="alert-details">
+                    <div class="impact-summary">
+                      <div class="impact-icon">👥</div>
+                      <div class="impact-text">
+                        <div class="impact-number">${formatNumber(alert.humanitarian_impact.affected_population)}</div>
+                        <div class="impact-label">People potentially affected</div>
+                      </div>
+                    </div>
+                    
+                    <div class="factors-list">
+                      <h5>Driving Factors:</h5>
+                      <ul>
+                        ${alert.driving_factors.map(factor => `<li>${factor}</li>`).join('')}
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div class="response-section">
+                    <h5>Response Recommendations:</h5>
+                    <div class="response-timeline">
+                      <span class="timeline-label">Timeline:</span>
+                      <span class="timeline-value">${alert.recommended_timeline}</span>
+                    </div>
+                    <ul class="response-list">
+                      ${alert.response_recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+          
+          html += '</div>';
+          container.innerHTML = html;
+        }
+        
+        function formatAlertType(type) {
+          return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+        
+        function formatNumber(num) {
+          if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+          if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+          return num.toString();
+        }
+      </script>
 
       <!-- Federated Learning Section -->
       <div class="card federated-learning-card">
@@ -1406,5 +1816,6 @@
 
   <!-- Include the Crisis Simulator script -->
   <script src="/static/crisis-simulator.js" defer></script>
+  <script src="/static/cosmic-prediction.js" defer></script>
 </body>
 </html>
